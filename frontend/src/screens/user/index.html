@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/styles">
+</head>
+
+<body>
+
+
+  <div class="interface">
+
+
+    <form id="form" class="form">
+
+      <h1>User info</h1>
+      <input id="user" type="text" disabled placeholder="user">
+      <input id="email" type="email" disabled placeholder="email">
+
+    </form>
+
+  </div>
+
+  <script>
+
+    const form = document.getElementById('form');
+    const inputUser = document.getElementById('user');
+    const inputEmail = document.getElementById('email');
+
+    async function authenticToken() {
+
+      const data = {
+        token: getCookie('token')
+      }
+
+      const response = await fetch('http://localhost:3000/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json'
+        },
+        body: JSON.stringify(data)
+      })
+
+      return response.json()
+
+    }
+
+    function getCookie(cname) {
+      let name = cname + "=";
+      let decodedCookie = decodeURIComponent(document.cookie);
+      let ca = decodedCookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+
+    authenticToken().then(response => {
+      if (response.message == 'Invalid token') {
+        location.replace("/login")
+      } else if (response.message == 'Valid token') {
+
+        inputUser.value = response.data.user
+        inputEmail.value = response.data.email
+
+      }
+    })
+
+  </script>
+
+</body>
+
+</html>

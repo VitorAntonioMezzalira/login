@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/styles">
+</head>
+<body>
+  
+
+  <div class="interface">
+
+
+    <form id="form" class="form">
+
+        <h1>Register</h1>
+        <p id="message"></p>
+        <input id="user" type="text" placeholder="user">
+        <input id="email" type="email" placeholder="email">
+        <input id="password" type="password" placeholder="password">
+        <button>Register</button>
+        <p>Already have an account? <a href="/login">Login</a></p>
+
+    </form>
+
+  </div>    
+
+  <script>
+
+    const form = document.getElementById('form');
+    const inputUser = document.getElementById('user');
+    const inputEmail = document.getElementById('email');
+    const inputPassword = document.getElementById('password');
+    const message = document.getElementById('message')
+
+    async function authenticUser() {
+
+      const data = {
+        user: inputUser.value,
+        email: inputEmail.value,
+        password: inputPassword.value
+      }
+
+      const response =  await fetch('http://localhost:3000/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Application/json'
+        },
+        body: JSON.stringify(data)
+      })
+
+      return response.json()
+
+    }
+
+    form.addEventListener('submit', (e) => {
+
+      e.preventDefault();
+
+      authenticUser().then(response => {
+        console.log(response.message)
+        message.innerText = response.message
+      });
+
+    })
+
+
+  </script>
+
+</body>
+</html>
